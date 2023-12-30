@@ -111,19 +111,3 @@ const styles = StyleSheet.create({
       },
 });
 
-
-
-
-
-//video component part
-/*
-<View style={styles.container}>
-<YouTube
-     videoId={'https://youtu.be/jG2P0AyW1vM?feature=shared'} // The YouTube video ID you want to play
-     play // Control playback of video with true/false
-     fullscreen // Control whether the video should play in fullscreen or inline
-     loop // Control whether the video should loop when ended
-     apiKey="AIzaSyCyS_-D2CkUKUy5nsvzZCH9E9BIIloeK4E" // YouTube Data API key   // API KEY :- 'AIzaSyCyS_-D2CkUKUy5nsvzZCH9E9BIIloeK4E'
-     style={styles.youtubePlayer}
-/>
-</View>*/

@@ -12,7 +12,7 @@ const DotSection = ({ onClose, onSelectOption }) => {
 
   return (
     <TouchableWithoutFeedback onPress={handleOutsidePress}>
-      <View style={styles.container}>
+      <View style={[styles.container, { zIndex: 1 }]}>
         <TouchableOpacity style={styles.option} onPress={() => onSelectOption('Breaking News')}>
           <Text>Breaking News</Text>
         </TouchableOpacity>

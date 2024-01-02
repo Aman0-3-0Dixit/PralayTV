@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Animated, PanResponder, Image, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Animated, PanResponder, Image, TouchableWithoutFeedback, ScrollView } from 'react-native';
 import { Box, HStack, Heading } from 'native-base';
 import { Linking } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
@@ -63,6 +63,11 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
           <Text style={styles.headerText}>Username</Text>
           <Text style={styles.headerText}>UserCount : 10000</Text>
         </View>
+
+        <ScrollView
+           style={[styles.sidebar, { display: isOpen ? 'flex' : 'none' }]}
+           contentContainerStyle={styles.sidebarContent}
+        >
         
         <TouchableOpacity style={styles.drawerItem} onPress={() => openLink('http://www.pralaytv.com/#Home/')}>
         <HStack
@@ -112,7 +117,7 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
           <Image source={require('../screenAssets/instagram.png')} style={{height:24, width: 24, left:10}}  />
           <Text style={{fontWeight:'600', left:40}}>Instagram Page</Text></HStack>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.drawerItem} onPress={() => openLink('https://twitter.com/pralaytv/')}>
+        <TouchableOpacity style={styles.drawerItem} onPress={() => Linking.openURL('tel:07314200790')}>
         <HStack
         >
           <Image source={require('../screenAssets/telephone.png')} style={{height:24, width: 24, left:10}}  />
@@ -137,6 +142,8 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
           <Image source={require('../screenAssets/web.png')} style={{height:24, width: 24, left:10}}  />
           <Text style={{fontWeight:'600', left:40}}>NCS^ Website</Text></HStack>
         </TouchableOpacity>
+        </ScrollView>
+
       </Animated.View>
     </TouchableWithoutFeedback>
   );

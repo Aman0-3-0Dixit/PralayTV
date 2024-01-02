@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { View, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Box, HStack, Input, Heading } from 'native-base';
-import { Ionicons } from '@expo/vector-icons';
 import CalendarComponent from './calendar';
 import DotSection from './dotSection';
 
@@ -71,10 +70,10 @@ export default function TopNavBar({ openSidebar }) {
             <TouchableOpacity onPress={openSidebar}>
               <Image source={require('../screenAssets/navpic.png')} style={{ width: 21, height: 21, left: 5 }} />
             </TouchableOpacity>
-            <Heading size="md" left={'5'} color="black">PralayTV</Heading>
+            <Heading size="md" left={'5'} color="black" >PralayTV</Heading>
           </HStack>
         )}
-        <HStack space={7} style={isSearchActive ? styles.hidden : null}>
+        <HStack space={7} style={[isSearchActive ? styles.hidden : null,{marginRight:10,marginLeft:25}]} >
         <TouchableOpacity onPress={handleSearchPress}>
             <Image source={require('../screenAssets/search.png')} style={{ width: 20, height: 20 }} />
           </TouchableOpacity>

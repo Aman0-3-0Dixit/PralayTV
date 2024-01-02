@@ -32,6 +32,7 @@ export default function ArticlesScreen() {
             <View style={styles.infoContainer}></View>
             <View style={styles.infoContainer}></View>
             </SafeAreaView>
+
             <BottomTab focussedIndex={1} />
             <Sidebar isOpen={isSidebarOpen} closeSidebar={closeSidebar} />
         </KeyboardAvoidingView>

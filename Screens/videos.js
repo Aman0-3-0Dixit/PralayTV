@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { KeyboardAvoidingView, ScrollView, TouchableOpacity } from 'react-native';
-import { StyleSheet, Text, View, SafeAreaView, Image, TextInput, Flex, Button } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, Image, TextInput, Flex, Button} from 'react-native';
 import { Box, Center, Modal } from "native-base";
 import { useNavigation } from '@react-navigation/native';
 import  BottomTab from '../components/bottomTab';
@@ -8,7 +8,6 @@ import TopTab from '../components/topTab';
 import Sidebar from '../components/sidebar';
 import VideoContainer from '../components/vidContainer';
 import YoutubePlayer from "react-native-youtube-iframe";
-
 
 
 export default function VideosScreen() {
@@ -67,7 +66,7 @@ export default function VideosScreen() {
                             title="Video Title"
                             description="This is the video description."
                             onPress={handleVideoPress}
-                />   
+                />  
                 <Button onPress={() => navigation.navigate('register')} title="Way to Auth" />
    
             </SafeAreaView>
@@ -108,6 +107,12 @@ const styles = StyleSheet.create({
 
       modal: {
         backgroundColor: '#ffd700',
+      },
+
+      sidebarContent: {
+        flexGrow: 1,
+        justifyContent: 'center',
+        padding: 5,
       },
 });
 

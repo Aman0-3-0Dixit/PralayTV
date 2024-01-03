@@ -2,33 +2,23 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Modal, StyleSheet } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 
-export default function CalendarComponent ({ isVisible, onClose }) {
+export default function CalendarComponent({ isVisible, onClose }) {
+  const [markedDates, setMarkedDates] = useState({});
+  //const [today, setToday] = useState('');
 
-    const [today, setToday] = useState(null);
-
-    useEffect(() => {
-      const currentDate = new Date();
-      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-      const formattedDate = currentDate.toLocaleDateString(undefined, options);
-      setToday(formattedDate);
-    }, []);
+  useEffect(() => {
+    const currentDate = new Date();
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const formattedDate = currentDate.toLocaleDateString(undefined, options);
+    //setToday(formattedDate);
+    setMarkedDates({ [formattedDate]: { selected: true, marked: true } });
+  }, []);
 
   return (
-    <Modal
-      visible={isVisible}
-      animationType="slide"
-      transparent={true}
-      onRequestClose={onClose}
-    >
+    <Modal visible={isVisible} animationType="slide" transparent={true} onRequestClose={onClose}>
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
-          <Calendar
-            
-            current={today}
-            markedDates={{
-              today: { selected: true, marked: true },
-            }}
-          />
+          <Calendar markedDates={markedDates} />
           <TouchableOpacity onPress={onClose} style={styles.closeButton}>
             <Text style={styles.closeButtonText}>Close Calendar</Text>
           </TouchableOpacity>
@@ -36,7 +26,7 @@ export default function CalendarComponent ({ isVisible, onClose }) {
       </View>
     </Modal>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -67,4 +57,5 @@ const styles = StyleSheet.create({
     color: 'white',
   },
 });
+
 

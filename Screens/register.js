@@ -13,9 +13,9 @@ export default function Register() {
         style={{ flex: 1 }}
         behavior='height'
         keyboardShouldPersistTaps='always' 
-        keyboardVerticalOffset={-500}
+        keyboardVerticalOffset={350}
         >
-            <Image source={require('../screenAssets/pralaylogo.png')} style={{width: 100, height: 100, alignSelf: 'center', marginTop: 70}} />
+            <Image source={require('../screenAssets/pralaylogo.png')} style={{width: 100, height: 100, alignSelf: 'center', marginTop: 50}} />
             <Text style={{fontSize: 25, alignSelf: 'center'}}>PralayTV</Text>
 
             <RegistrationForm />

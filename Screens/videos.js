@@ -13,6 +13,7 @@ import YoutubePlayer from "react-native-youtube-iframe";
 export default function VideosScreen() {
 
   const navigation = useNavigation();
+  
   const [isModalVisible, setModalVisible] = useState(false);
 
   const openModal = () => {

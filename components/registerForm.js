@@ -1,43 +1,170 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, Pressable } from 'react-native';
-import { Input, Button, View, Select, CheckIcon, WarningOutlineIcon, Center, FormControl } from 'native-base';
+import { StyleSheet, Text, Pressable, TextInput, View } from 'react-native';
+import { Input, Button, Select, CheckIcon, WarningOutlineIcon, Center, FormControl } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
+import SignInModal from './signInModal';
 
 const RegistrationForm = ({ isLogin }) => {
+
+    const [isSignInModalVisible, setSignInModalVisible] = useState(false);
+
+    const handleSignIn = async () => {
+      // Make your API request
+  
+      // If user not found, show the modal
+      setSignInModalVisible(true);
+    };
+  
+    const closeSignInModal = () => {
+      setSignInModalVisible(false);
+    };
+  
+    const handleRegisterPress = () => {
+        navigation.navigate('register');
+    };
+
+  function truncateText(text, maxLength) {
+        if (text.length > maxLength) {
+           return text.substring(0, maxLength) ;
+         }
+         return text;
+  }
+
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [mobileNo, setMobileNo] = useState('');
   const [gender, setGender] = useState('');
-  const [email, setEmail] = useState('');
-  const [assistant, setAssistant] = useState('');
+  const [emailId, setEmail] = useState('');
+  const [assister, setAssister] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
   const navigation = useNavigation();
 
-  const handleAction = () => {
+  const nameFirstSet = (newText) => {
+    newText = truncateText(newText, 50);
+    setFirstName(newText);
+  };
+
+  const nameLastSet = (newText) => {
+    newText = truncateText(newText, 50);
+    setLastName(newText);
+  };
+
+  const mobileNoSet = (newText) => {
+    newText = truncateText(newText, 10);
+    setMobileNo(newText);
+  };
+
+  const genderSet = (newText) => {
+    newText = truncateText(newText, 50);
+    setGender(newText);
+  };
+
+  const emailSet = (newText) => {
+    newText = truncateText(newText, 50);
+    setEmail(newText);
+  }
+
+  const assisterSet = (newText) => {
+    newText = truncateText(newText, 50);
+    setAssister(newText);
+  }
+
+  const passwordSet = (newText) => {
+    newText = truncateText(newText, 20);
+    setPassword(newText);
+  };
+
+  const passwordConfirmSet = (newText) => {
+    newText = truncateText(newText, 20);
+    setConfirmPassword(newText);
+  };
+
+  const handleAction  = async () => {
+
     if (isLogin) {
       // Handle login logic here
-      navigation.navigate('otp');
-    } else {
-      // Handle registration logic here
-      navigation.navigate('login');
+
+      try {
+        console.log('Logging in user:');
+        const response = await fetch('http://192.168.1.127:3000/user/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                mobileNo,
+                emailId,
+                password,
+            }),
+            });
+
+            const data = await response.json();
+            console.log(data);
+
+            if(response.status === 200) {
+                navigation.navigate('videos');
+            }
+
+            else {
+                setSignInModalVisible(true);
+            }
+
+      } catch (error) {
+        console.log('Error logging :', error);
+        setSignInModalVisible(true);
+      }
+
+    } 
+    
+    else {
+      // Handling registration logic here
+      try {
+        console.log('Registering user:');
+        const response = await fetch('http://192.168.1.127:3000/user/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            firstName,
+            lastName,
+            gender,
+            assister,
+            mobileNo,
+            emailId,
+            password,
+          }),
+        });
+    
+        const data = await response.json();
+        console.log(data); // Log the response from the server
+        navigation.navigate('login');
+      } catch (error) {
+        console.error('Error registering:', error);
+      }
     }
   };
 
   return (
     <Center>
-      <FormControl maxW="350" margin={'5'}  top={10} isRequired>
+      <FormControl maxW="350" margin={'5'}  top={3} isRequired>
         {!isLogin && (
           <>
             <Input
               style={styles.input}
               placeholder="First Name*"
+              keyboardType='default'
               value={firstName}
-              onChangeText={(text) => setFirstName(text)}
+              onChangeText={nameFirstSet}
             />
             <Input
               style={styles.input}
               placeholder="Last Name*"
+              keyboardType='default'
               value={lastName}
-              onChangeText={(text) => setLastName(text)}
+              onChangeText={nameLastSet}
             />
             <Select
               style={styles.input}
@@ -45,7 +172,7 @@ const RegistrationForm = ({ isLogin }) => {
               accessibilityLabel="Choose Gender"
               placeholder="Select Gender"
               value={gender}
-              onValueChange={(itemValue) => setGender(itemValue)}
+              onValueChange={genderSet}
             >
               <Select.Item label="Male" value="Male" />
               <Select.Item label="Female" value="Female" />
@@ -54,8 +181,9 @@ const RegistrationForm = ({ isLogin }) => {
             <Input
               style={styles.input}
               placeholder="Assister"
-              value={assistant}
-              onChangeText={(text) => setAssistant(text)}
+              keyboardType="default"
+              value={assister}
+              onChangeText={assisterSet}
             />
           </>
         )}
@@ -65,14 +193,28 @@ const RegistrationForm = ({ isLogin }) => {
           placeholder="Mobile No.*"
           keyboardType="phone-pad"
           value={mobileNo}
-          onChangeText={(text) => setMobileNo(text)}
+          onChangeText={mobileNoSet}
         />
         <Input
           style={styles.input}
           placeholder="Email*"
-          keyboardType="email-address"
-          value={email}
-          onChangeText={(text) => setEmail(text)}
+          keyboardType="default"
+          value={emailId}
+          onChangeText={emailSet}
+        />
+        <Input
+          style={styles.input}
+          placeholder="Password*"
+          keyboardType="default"
+          value={password}
+          onChangeText={passwordSet}
+        />
+        <Input
+          style={styles.input}
+          placeholder="Confirm Password*"
+          keyboardType="default"
+          value={confirmPassword}
+          onChangeText={passwordConfirmSet}
         />
 
         <Button block style={styles.registerButton} onPress={handleAction}>
@@ -84,6 +226,15 @@ const RegistrationForm = ({ isLogin }) => {
           </Text>
         </Pressable>
       </FormControl>
+
+      {/* signIn modal condition to display on the login screen after the */}
+        {isSignInModalVisible && (
+            <SignInModal
+                isVisible={isSignInModalVisible}
+                onClose={closeSignInModal}
+                onRegisterPress={handleRegisterPress}
+            />
+        )}
     </Center>
   );
 };
@@ -91,7 +242,7 @@ const RegistrationForm = ({ isLogin }) => {
 const styles = StyleSheet.create({
   
   input: {
-    marginBottom: 18,
+    marginBottom: 5,
     backgroundColor: '#f2f2f2',
     fontSize: 15,
   },
@@ -112,9 +263,11 @@ const styles = StyleSheet.create({
     marginTop: 28,
     textAlign: 'center',
   },
+
   linkText: {
     color: 'blue',
   },
+
 });
 
 export default RegistrationForm;

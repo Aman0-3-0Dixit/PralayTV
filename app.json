@@ -7,9 +7,9 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./screenAssets/tvonelogo.png",
+      "image": "./screenAssets/AvGh.gif",
       "resizeMode": "contain",
-      "backgroundColor": "#ffd700"
+      "backgroundColor": "#00000"
     },
     "assetBundlePatterns": [
       "**/*"

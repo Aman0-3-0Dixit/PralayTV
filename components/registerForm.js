@@ -9,9 +9,6 @@ const RegistrationForm = ({ isLogin }) => {
     const [isSignInModalVisible, setSignInModalVisible] = useState(false);
 
     const handleSignIn = async () => {
-      // Make your API request
-  
-      // If user not found, show the modal
       setSignInModalVisible(true);
     };
   

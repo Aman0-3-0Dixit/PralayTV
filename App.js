@@ -12,6 +12,7 @@ import Register from './Screens/register.js';
 import Login from './Screens/login.js';
 import { NativeBaseProvider } from 'native-base';
 import OtpInput from './Screens/otp.js';
+import BouncingSplash from './components/bounceAnimation.js';
 
 
 AppRegistry.registerComponent('main', () => App);  // a crucial addition in the project to expicitly define app registration when other dependecies was interfering in the automatic registration of the app component in the expo build AppEntry.js file
@@ -22,7 +23,8 @@ export default function App() {
   return (
     <NativeBaseProvider>
     <NavigationContainer>
-      <Stack.Navigator initialRouteName='register'>
+      <Stack.Navigator initialRouteName='splash'>
+      <Stack.Screen name="splash" options={{ headerShown: false }} component={BouncingSplash} />
       <Stack.Screen name="videos" options={{ headerShown: false }} component={VideosScreen} />
       <Stack.Screen name="articles" options={{ headerShown: false }} component={ArticlesScreen} />
       <Stack.Screen name="playList" options={{ headerShown: false }} component={PlayListScreen} />

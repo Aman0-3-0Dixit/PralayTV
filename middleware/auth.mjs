@@ -21,10 +21,12 @@ const authenticateToken = (req, res, next) => {
         // Log the decoded token and user ID
         console.log('Decoded Token:', decoded);
         console.log('Decoded User ID:', decoded.userId);
+
   
         // Assign the decoded user ID to req.user.userId
         Object.defineProperty(req, 'user', { value: { userId: decoded.userId }, writable: true });
         next();
+        
       });
     } catch (error) {
       console.error('Error during token verification:', error);

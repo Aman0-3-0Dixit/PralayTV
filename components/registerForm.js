@@ -24,8 +24,32 @@ const RegistrationForm = ({ isLogin }) => {
         if (text.length > maxLength) {
            return text.substring(0, maxLength) ;
          }
+
          return text;
   }
+
+  const calculatePasswordStrength = (password) => {
+  
+    const minLength = 8;
+    const hasDigit = /\d/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+  
+    if (password.length < minLength) {
+      return 'Weak: Password should be at least 8 characters long';
+    }
+  
+    if (!hasDigit) {
+      return 'Weak: Password should contain at least one digit';
+    }
+  
+    if (!hasSpecialChar) {
+      return 'Weak: Password should contain at least one special character';
+    }
+  
+    return 'Strong';
+
+  };
+  
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -35,6 +59,8 @@ const RegistrationForm = ({ isLogin }) => {
   const [assister, setAssister] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordStrength, setPasswordStrength] = useState('');
+
 
   const navigation = useNavigation();
 
@@ -71,6 +97,10 @@ const RegistrationForm = ({ isLogin }) => {
   const passwordSet = (newText) => {
     newText = truncateText(newText, 20);
     setPassword(newText);
+
+    // Checking password strength and updating the state accordingly
+    const strength = calculatePasswordStrength(newText);
+    setPasswordStrength(strength);
   };
 
   const passwordConfirmSet = (newText) => {
@@ -81,8 +111,13 @@ const RegistrationForm = ({ isLogin }) => {
   const handleAction  = async () => {
 
     if (isLogin) {
-      // Handle login logic here
+      // Handling login logic here
+      const loginRequiredFields = [mobileNo, emailId, password];
 
+      if (loginRequiredFields.some(field => !field)) {
+        alert('Please fill in all required fields');
+        return;
+      }
       try {
         console.log('Logging in user:');
         const response = await fetch('http://192.168.1.127:3000/user/login', {
@@ -117,6 +152,23 @@ const RegistrationForm = ({ isLogin }) => {
     
     else {
       // Handling registration logic here
+      if (password !== confirmPassword) {
+        alert('Passwords do not match');
+        return;
+      }
+
+      if (passwordStrength.includes('Weak')) {
+        alert('Password is weak');
+        return;
+      }
+
+      const registerRequiredFields = [firstName, lastName, gender, mobileNo, emailId, password];
+      
+      if (registerRequiredFields.some(field => !field)) {
+        alert('Please fill in all required fields');
+        return;
+      }
+
       try {
         console.log('Registering user:');
         const response = await fetch('http://192.168.1.127:3000/user/register', {
@@ -136,11 +188,13 @@ const RegistrationForm = ({ isLogin }) => {
         });
     
         const data = await response.json();
-        console.log(data); // Log the response from the server
+        console.log(data);
         navigation.navigate('login');
       } catch (error) {
         console.error('Error registering:', error);
       }
+    
+    
     }
   };
 
@@ -171,9 +225,11 @@ const RegistrationForm = ({ isLogin }) => {
               value={gender}
               onValueChange={genderSet}
             >
+
               <Select.Item label="Male" value="Male" />
               <Select.Item label="Female" value="Female" />
               <Select.Item label="Prefer Not to Say" value="Prefer Not to Say" />
+
             </Select>
             <Input
               style={styles.input}
@@ -182,6 +238,7 @@ const RegistrationForm = ({ isLogin }) => {
               value={assister}
               onChangeText={assisterSet}
             />
+            
           </>
         )}
 
@@ -192,6 +249,7 @@ const RegistrationForm = ({ isLogin }) => {
           value={mobileNo}
           onChangeText={mobileNoSet}
         />
+
         <Input
           style={styles.input}
           placeholder="Email*"
@@ -199,6 +257,7 @@ const RegistrationForm = ({ isLogin }) => {
           value={emailId}
           onChangeText={emailSet}
         />
+
         <Input
           style={styles.input}
           placeholder="Password*"
@@ -206,17 +265,32 @@ const RegistrationForm = ({ isLogin }) => {
           value={password}
           onChangeText={passwordSet}
         />
-        <Input
-          style={styles.input}
-          placeholder="Confirm Password*"
-          keyboardType="default"
-          value={confirmPassword}
-          onChangeText={passwordConfirmSet}
-        />
 
-        <Button block style={styles.registerButton} onPress={handleAction}>
-          {isLogin ? 'Login' : 'Register'}
+        {!isLogin && (
+            <>
+            <Input
+                style={styles.input}
+                placeholder="Confirm Password*"
+                keyboardType="default"
+                value={confirmPassword}
+                onChangeText={passwordConfirmSet}
+            />
+
+            {password !== '' &&
+           <Text style={{ color: passwordStrength.includes('Weak') ? 'red' : 'green' }}>
+                Password Strength: {passwordStrength}
+           </Text>
+            }
+
+            </>
+            )
+        }
+
+
+        <Button block style={styles.registerButton} onPress={handleAction} disabled={passwordStrength.includes('Weak')}>
+              {isLogin ? 'Login' : 'Register'}
         </Button>
+
         <Pressable onPress={() => navigation.navigate(isLogin ? 'register' : 'login')}>
           <Text style={styles.loginText}>
             If you have an account, <Text style={styles.linkText}>{isLogin ? 'click here to register' : 'click here to login'}</Text>
@@ -224,7 +298,8 @@ const RegistrationForm = ({ isLogin }) => {
         </Pressable>
       </FormControl>
 
-      {/* signIn modal condition to display on the login screen after the */}
+      {/* signIn modal condition to display on the login screen after an unsuccessful attempt at signing in */}
+
         {isSignInModalVisible && (
             <SignInModal
                 isVisible={isSignInModalVisible}
@@ -232,6 +307,7 @@ const RegistrationForm = ({ isLogin }) => {
                 onRegisterPress={handleRegisterPress}
             />
         )}
+
     </Center>
   );
 };

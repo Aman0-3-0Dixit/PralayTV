@@ -3,6 +3,7 @@ import { StyleSheet, Text, Pressable, TextInput, View } from 'react-native';
 import { Input, Button, Select, CheckIcon, WarningOutlineIcon, Center, FormControl } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 import SignInModal from './signInModal';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const RegistrationForm = ({ isLogin }) => {
 
@@ -132,10 +133,13 @@ const RegistrationForm = ({ isLogin }) => {
             }),
             });
 
-            const data = await response.json();
-            console.log(data);
-
-            if(response.status === 200) {
+            if (response.status === 200) {
+                const result = await response.json();
+                console.log(result);
+                const token = result.token;
+          
+                // Store the token in AsyncStorage
+                AsyncStorage.setItem('token', token).then(() => {console.log('token stored');}).catch((error) => {console.error('Error saving token:', error);});
                 navigation.navigate('videos');
             }
 
@@ -163,7 +167,7 @@ const RegistrationForm = ({ isLogin }) => {
       }
 
       const registerRequiredFields = [firstName, lastName, gender, mobileNo, emailId, password];
-      
+
       if (registerRequiredFields.some(field => !field)) {
         alert('Please fill in all required fields');
         return;
@@ -287,7 +291,7 @@ const RegistrationForm = ({ isLogin }) => {
         }
 
 
-        <Button block style={styles.registerButton} onPress={handleAction} disabled={passwordStrength.includes('Weak')}>
+        <Button block style={styles.registerButton} onPress={handleAction} /*disabled={passwordStrength.includes('Weak')}*/>
               {isLogin ? 'Login' : 'Register'}
         </Button>
 

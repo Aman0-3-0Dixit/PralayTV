@@ -1,14 +1,28 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated, PanResponder, Image, TouchableWithoutFeedback, ScrollView } from 'react-native';
 import { Box, HStack, Heading } from 'native-base';
 import { Linking } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { fetchUserDetails } from './fetchUser';
 
 
 const Sidebar = ({ isOpen, closeSidebar }) => {
   const openLink = (url) => {
     Linking.openURL(url).catch((err) => console.error('Error opening link: ', err));
   };
+
+  // State to store user details
+  const [userDetails, setUserDetails] = useState(null);
+
+  // Fetch user details when the component mounts
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const userDetailsData = await fetchUserDetails();
+      setUserDetails(userDetailsData);
+    };
+    
+    fetchUserData();
+  }, []);
 
   const animation = useRef(new Animated.Value(0)).current;
 
@@ -60,8 +74,12 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
       >
         <View style = {styles.header}>
           <Image source={require('../screenAssets/pralaylogo.png')} style={styles.logo} />
-          <Text style={styles.headerText}>Username</Text>
-          <Text style={styles.headerText}>UserCount : 10000</Text>
+          {userDetails && (
+           <>
+              <Text style={styles.headerText}>{userDetails.firstName  + ' ' + userDetails.lastName}</Text>
+              <Text style={styles.headerText}>UserCount : 10000</Text>
+           </>
+          )}
         </View>
 
         <ScrollView

@@ -6,6 +6,13 @@ const JWT_SECRET = 'helloworld';
 
 // Middleware to verify JWT token
 const authenticateToken = (req, res, next) => {
+
+    const authorizationHeader = req.headers.authorization;
+    console.log('Received Authorization Header:', authorizationHeader);
+    if (!authorizationHeader) {
+        return res.status(401).json({ message: 'Access denied - Authorization header missing' });
+    }
+
     const token = req.header('Authorization').split(' ')[1];
     console.log('Received Token in Middleware:', token);
   
@@ -26,7 +33,7 @@ const authenticateToken = (req, res, next) => {
         // Assign the decoded user ID to req.user.userId
         Object.defineProperty(req, 'user', { value: { userId: decoded.userId }, writable: true });
         next();
-        
+
       });
     } catch (error) {
       console.error('Error during token verification:', error);

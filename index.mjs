@@ -2,13 +2,20 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-
+import session from 'express-session';
 import connectDB from './db.mjs';
 import userRoutes from './routes/user.mjs';
 
 
 const app = express();
 const port = 3000;
+
+app.use(session({
+    secret: 'helloworld', 
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }, // Set secure to true in a production environment with HTTPS
+}));
 
 app.use(cors()); // Enable CORS for all routes
 

@@ -6,9 +6,60 @@ import jwt from 'jsonwebtoken';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const router = express.Router();
+const Time = new Date();
+
+const API_SECRET = 'TxswPXevop8wRzCl853JmmInVUdsV1F6UnVlRTVXY21Vd2RIUklkbHBqVTJWdVdXcFIn';
+
+function jwt_signed_url(path, host = 'https://cdn.jwplayer.com') {
+    const token = jwt.sign(
+        {
+            exp: Math.ceil((Time.getTime() + 3600) / 300) * 300,
+            resource: path,
+        },
+        API_SECRET
+    );
+
+    return `${host}${path}?token=${token}`;
+}
+
+const media_id = 'MEDIAID';
+const path = `/v2/media/${media_id}`;
+const url = jwt_signed_url(path);
+
+//console.log(url);
 
 // Secret key for signing JWT tokens
 const JWT_SECRET = 'helloworld';
+
+const JWPlayerApiKey = 'wflRtlim';
+const JWPlayerApiSecret = 'TxswPXevop8wRzCl853JmmInVUdsV1F6UnVlRTVXY21Vd2RIUklkbHBqVTJWdVdXcFIn';
+
+router.post('/fetchVideos', async (req, res) => {
+  try {
+    const selectedDate = req.body.selectedDate;
+    console.log('Selected date:', selectedDate);
+    console.log('Fetching videos...');
+
+    const jwPlayerVideosResponse = await fetch(
+      `https://cdn.jwplayer.com/v2/playlists/QEwoxnmQ`,
+      {
+        /*headers: {
+          Authorization: `Bearer ${token}`,
+        },*/
+      }
+    );
+
+    console.log('JW Player Videos Response:', jwPlayerVideosResponse);
+    const videos = await jwPlayerVideosResponse.json();
+
+    res.json(videos);
+  } catch (error) {
+    console.error('Error fetching videos:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
 
 router.get('/details', authenticateToken, async (req, res) => {
     console.log('inside details route');

@@ -5,7 +5,7 @@ import { Box, HStack, Input, Heading } from 'native-base';
 import CalendarComponent from './calendar';
 import DotSection from './dotSection';
 
-export default function TopNavBar({ openSidebar }) {
+export default function TopNavBar({ openSidebar, onVideosFetch, fetchVideos }) {
   const navigation = useNavigation();
 
   const [isOptionsBoxVisible, setOptionsBoxVisible] = useState(false);
@@ -25,6 +25,21 @@ export default function TopNavBar({ openSidebar }) {
   };
 
   const [isCalendarVisible, setCalendarVisible] = useState(false);
+  const [selectedDate, setSelectedDate] = useState('');
+
+
+  const handleDateSelect = async (date) => {
+    try {
+      setSelectedDate(date);
+  
+      // Calling fetchVideos with the selected date
+      await fetchVideos(date);
+    } catch (error) {
+      console.error('Error handling date selection:', error);
+    }
+  };
+  
+  
 
   const openCalendar = () => {
     setCalendarVisible(true);
@@ -91,7 +106,7 @@ export default function TopNavBar({ openSidebar }) {
           <Image source={require('../screenAssets/dots.png')} style={{ width: 20, height: 20 }} />
         </TouchableOpacity>
       </HStack>
-      <CalendarComponent isVisible={isCalendarVisible} onClose={closeCalendar} />
+      <CalendarComponent isVisible={isCalendarVisible} onClose={closeCalendar} onDateSelect={handleDateSelect} fetchVideos={fetchVideos} />
       {isOptionsBoxVisible && (
         <DotSection onClose={closeOptionsBox} onSelectOption={handleSelectOption} />
       )}
